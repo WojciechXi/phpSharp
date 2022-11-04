@@ -3,7 +3,6 @@
 namespace Server\Database {
 
     use Server\Database;
-    use System\Serialization\Data;
 
     class DatabaseObject {
 
