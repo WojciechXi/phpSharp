@@ -17,16 +17,20 @@ namespace Server {
         //Local
 
         private function __construct() {
+        }
+
+        private ?mysqli $mysqli = null;
+
+        public function Connect(): bool {
             $host = Config::Instance()->Get('Database.Host');
             $user = Config::Instance()->Get('Database.User');
             $password = Config::Instance()->Get('Database.Password');
             $database = Config::Instance()->Get('Database.Database');
             $charset = Config::Instance()->Get('Database.Charset', 'utf8mb4');
-            $this->mysqli = new mysqli($host, $user, $password, $database, $charset);
+            $this->mysqli = new mysqli($host, $user, $password, $database);
             $this->mysqli->set_charset($charset);
+            return true;
         }
-
-        private ?mysqli $mysqli = null;
 
         public function Close(): bool {
             if (!$this->mysqli) return false;
