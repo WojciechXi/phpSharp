@@ -28,5 +28,9 @@ namespace System\IO {
         public function WriteAllText(string $text): int | false {
             return file_put_contents($this->path, $text);
         }
+
+        public function RequireOnce(): bool {
+            return boolval(require_once($this->path));
+        }
     }
 }
