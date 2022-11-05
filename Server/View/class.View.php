@@ -37,11 +37,13 @@ namespace Server\View {
                     $request = Request::Instance();
                     $server = Server::Instance();
                     $session = Session::Instance();
-                    foreach ($params as $key => $value) eval("{$key} = {$value};");
                     require $path;
                 });
 
-                foreach ($replace as $key => $value) $buffer = str_replace('{{' . $key . '}}', $value, $buffer);
+                foreach ($replace as $key => $value) {
+                    if (is_array($value)) $value = implode('', $value);
+                    $buffer = str_replace('{{' . $key . '}}', $value, $buffer);
+                }
 
                 return $buffer;
             }
