@@ -8,11 +8,7 @@ namespace Server {
 
         public static function Read(callable $action): string {
             ob_start();
-            try {
-                $action();
-            } catch (Exception $exception) {
-                print_r($exception);
-            }
+            $action();
             $contents = ob_get_contents();
             ob_end_clean();
             return $contents;

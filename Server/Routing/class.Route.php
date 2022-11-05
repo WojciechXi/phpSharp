@@ -4,6 +4,7 @@ namespace Server\Routing {
 
     use Closure;
     use ReflectionFunction;
+    use Server\View\View;
     use Server\Request\Params;
     use Server\Request\Request;
     use Server\Request\RequestUri;
@@ -78,6 +79,7 @@ namespace Server\Routing {
             foreach ($reflectionFunction->getParameters() as $parameter) {
                 if ($parameter->getName() == 'request') $arguments['request'] = $request;
                 if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
+                if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
                 if ($parameter->getName() == 'params') $arguments['params'] = new Params($this->requestUri, $request->RequestUri());
             }
 
