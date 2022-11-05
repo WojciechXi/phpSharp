@@ -19,5 +19,13 @@ namespace Server\Request {
             $requestUri = array_values($requestUri);
             return isset($requestUri[$index]) ? $requestUri[$index] : $defaultValue;
         }
+
+        public function Length(): int {
+            $requestUri = explode('?', $this->requestUri)[0];
+            $requestUri = explode('/', $requestUri);
+            $requestUri = array_diff($requestUri, ['']);
+            $requestUri = array_values($requestUri);
+            return count($requestUri);
+        }
     }
 }

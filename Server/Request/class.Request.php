@@ -38,5 +38,13 @@ namespace Server\Request {
         public function Uri(int $index = 0, string $defaultValue = ''): string {
             return $this->requestUri->Get($index, $defaultValue);
         }
+
+        public function RequestUri(): RequestUri {
+            return $this->requestUri;
+        }
+
+        public function Method(): string {
+            return $this->requestMethod;
+        }
     }
 }
