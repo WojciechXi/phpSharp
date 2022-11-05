@@ -6,7 +6,7 @@ namespace Server {
 
     class Ob {
 
-        public static function Read(callable $action, array $replace = []): string {
+        public static function Read(callable $action): string {
             ob_start();
             try {
                 $action();
@@ -15,7 +15,6 @@ namespace Server {
             }
             $contents = ob_get_contents();
             ob_end_clean();
-            foreach ($replace as $key => $value) $contents = str_replace('{{' . $key . '}}', $value, $contents);
             return $contents;
         }
     }
