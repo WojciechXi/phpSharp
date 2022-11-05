@@ -2,9 +2,8 @@
 
 namespace Server\View {
 
-    use Application;
+    use Ob;
     use System\IO\File;
-    use Server\Ob;
     use Server\Request\Request;
     use Server\Server;
     use Server\Session;
@@ -25,7 +24,7 @@ namespace Server\View {
         }
 
         public function GetPath(): string {
-            return Application::Instance()->GetPath('Views');
+            return Program::Instance()->GetPath('Views');
         }
 
         public function Load(string $name, array $replace = [], array $params = []): ?string {
