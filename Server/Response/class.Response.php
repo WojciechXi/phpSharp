@@ -18,7 +18,7 @@ namespace Server\Response {
 
         private mixed $content = null;
         private string $contentType = 'text/html';
-        private int $responseCode = 200;
+        private int $responseCode = 404;
 
         public function Header(string $key, string $value): self {
             header("{$key}: {$value}");
