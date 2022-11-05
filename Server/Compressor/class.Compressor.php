@@ -2,7 +2,6 @@
 
 namespace Server\Compressor {
 
-    use System\IO\File;
     use System\IO\Directory;
 
     class Compressor {

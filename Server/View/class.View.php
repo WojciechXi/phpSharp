@@ -3,11 +3,12 @@
 namespace Server\View {
 
     use Ob;
-    use System\IO\File;
-    use Server\Request\Request;
+    use Program\Program;
+    use Server\Config;
     use Server\Server;
     use Server\Session;
-    use Program\Program;
+    use System\IO\File;
+    use Server\Request\Request;
 
     class View {
 
@@ -31,6 +32,7 @@ namespace Server\View {
             $path = $this->GetPath() . '/' . $name . '.php';
             if (File::Exists($path)) {
                 $buffer = Ob::Read(function () use ($path, $params) {
+                    $config = Config::Instance();
                     $program = Program::Instance();
                     $request = Request::Instance();
                     $server = Server::Instance();

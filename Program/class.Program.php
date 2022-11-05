@@ -6,6 +6,7 @@ namespace Program {
     use Server\Response\Response;
     use Server\Routing\Route;
     use Server\Session;
+    use Server\Server;
 
     class Program {
 
@@ -31,6 +32,13 @@ namespace Program {
 
         public final function GetPath(string $name, string $defaultPath = ''): string {
             return isset($this->paths[$name]) ? $this->paths[$name] : $defaultPath;
+        }
+
+        public final function GetUrl(string $name): string {
+            $server = Server::Instance();
+            $requestScheme = $server->Get('REQUEST_SCHEME');
+            $httpHost = $server->Get('HTTP_HOST');
+            return "{$requestScheme}://{$httpHost}/{$name}";
         }
 
         protected function Preload(): void {

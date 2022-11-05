@@ -16,7 +16,7 @@ namespace System\IO {
         //Local
 
         public function __construct(string $path) {
-            $this->path = $path;
+            $this->path = str_replace('\\', '/', $path);
         }
 
         private string $path = '';
@@ -41,15 +41,17 @@ namespace System\IO {
             foreach ($items as $item) {
                 $itemPath = implode('/', [$this->path, $item]);
                 if (is_dir($itemPath)) continue;
-                if ($extensions && $pathInfo = pathinfo($item)) {
-                    if (!in_array($pathInfo['extension'], $extensions)) continue;
+                if ($extensions) {
+                    $extension = pathinfo($item)['extension'];
+                    if (in_array($extension, $extensions)) $files[] = new File($itemPath);
+                } else {
+                    $files[] = new File($itemPath);
                 }
-                $files[] = new File($itemPath);
             }
 
             if ($recursive) {
                 $directories = $this->GetDirectories();
-                foreach ($directories as $directory) $files = $directory->GetFiles(true, $files);
+                foreach ($directories as $directory) $files = $directory->GetFiles(true, $extensions, $files);
             }
 
             return $files;
