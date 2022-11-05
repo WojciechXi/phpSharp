@@ -34,23 +34,29 @@ namespace Program {
         }
 
         protected function Preload(): void {
-            $this->SetPath('Applicatiom', '');
-            $this->SetPath('Config', '');
-            $this->SetPath('Routes', '');
-            $this->SetPath('Views', '');
+            $this->SetPath('Public', __DIR__ . '/Public');
+            $this->SetPath('Storage', __DIR__ . '/Public/Storage');
+
+            $this->SetPath('Styles', __DIR__ . '/Public/Styles');
+            $this->SetPath('Scripts', __DIR__ . '/Public/Scripts');
+
+            $this->SetPath('Config', __DIR__ . '/Config');
+            $this->SetPath('Routes', __DIR__ . '/Routes');
+            $this->SetPath('Views', __DIR__ . '/Views');
+            $this->SetPath('Application', __DIR__ . '/Application');
         }
 
         protected function Load(): void {
             $applicationDirectory = new Directory($this->GetPath('Application'));
-            $applicationFiles = $applicationDirectory->GetFiles(true);
+            $applicationFiles = $applicationDirectory->GetFiles(true, ['php']);
             foreach ($applicationFiles as $applicationFile) $applicationFile->RequireOnce();
 
             $configDirectory = new Directory($this->GetPath('Config'));
-            $configFiles = $configDirectory->GetFiles(true);
+            $configFiles = $configDirectory->GetFiles(true, ['php']);
             foreach ($configFiles as $configFile) $configFile->RequireOnce();
 
             $routesDirectory = new Directory($this->GetPath('Routes'));
-            $routesFiles = $routesDirectory->GetFiles(true);
+            $routesFiles = $routesDirectory->GetFiles(true, ['php']);
             foreach ($routesFiles as $routesFile) $routesFile->RequireOnce();
         }
 

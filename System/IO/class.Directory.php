@@ -36,11 +36,14 @@ namespace System\IO {
             return $directories;
         }
 
-        public function GetFiles(bool $recursive = false, array $files = []): array {
+        public function GetFiles(bool $recursive = false, array $extensions = [], array $files = []): array {
             $items = $this->GetItems();
             foreach ($items as $item) {
                 $itemPath = implode('/', [$this->path, $item]);
                 if (is_dir($itemPath)) continue;
+                if ($extensions && $pathInfo = pathinfo($item)) {
+                    if (!in_array($pathInfo['extension'], $extensions)) continue;
+                }
                 $files[] = new File($itemPath);
             }
 
