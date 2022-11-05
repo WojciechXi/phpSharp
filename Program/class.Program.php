@@ -37,9 +37,6 @@ namespace Program {
             $this->SetPath('Public', __DIR__ . '/Public');
             $this->SetPath('Storage', __DIR__ . '/Public/Storage');
 
-            $this->SetPath('Styles', __DIR__ . '/Public/Styles');
-            $this->SetPath('Scripts', __DIR__ . '/Public/Scripts');
-
             $this->SetPath('Config', __DIR__ . '/Config');
             $this->SetPath('Routes', __DIR__ . '/Routes');
             $this->SetPath('Views', __DIR__ . '/Views');
