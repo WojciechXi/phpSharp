@@ -60,7 +60,7 @@ namespace Server\Database {
             $table = static::$table;
             foreach ($data as $key => $value) $data[$key] = "{$key} = '{$value}'";
             $data = implode(', ', $data);
-            if (Database::Instance()->Bool("UPDATE {$table} SET {$data} WHERRE id = '{$this->id}' LIMIT 1")) {
+            if (Database::Instance()->Bool("UPDATE {$table} SET {$data} WHERE id = '{$this->id}' LIMIT 1")) {
                 $object = Database::Instance()->Object("SELECT * FROM {$table} WHERE id = '{$this->id}'");
                 $this->SetObject($object);
                 return true;
