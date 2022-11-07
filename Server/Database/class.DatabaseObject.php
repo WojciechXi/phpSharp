@@ -38,6 +38,10 @@ namespace Server\Database {
             return $objects;
         }
 
+        public static function Last(int $limit = 9): array {
+            return static::Objects("ORDER BY dateOfUpdate DESC LIMIT {$limit}");
+        }
+
         public static function ById(int $id): ?static {
             return static::Object("WHERE id = '{$id}'");
         }
