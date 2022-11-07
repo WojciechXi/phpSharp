@@ -42,12 +42,17 @@ namespace Server\Database {
             return static::Objects("ORDER BY dateOfUpdate DESC LIMIT {$limit}");
         }
 
-        public static function Random(int $limit = 9): array {
+        public static function Random(int $limit = 5): array {
             return static::Objects("ORDER BY RAND() LIMIT {$limit}");
         }
 
         public static function ById(int $id): ?static {
             return static::Object("WHERE id = '{$id}'");
+        }
+
+        public static function ObjectsById(array $ids): array {
+            $ids = implode(', ', $ids);
+            return static::Objects("WHERE id IN ( {$ids} )");
         }
 
         //Local

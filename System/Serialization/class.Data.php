@@ -1,6 +1,7 @@
 <?php
 
 namespace System\Serialization {
+
     class Data {
 
         public static function Serialize(mixed $data): string {
