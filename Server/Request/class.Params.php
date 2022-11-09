@@ -16,7 +16,7 @@ namespace Server\Request {
             $length = $this->from->Length();
             for ($i = 0; $i < $length; $i++)
                 if ($this->from->Get($i) == ":{$key}") return $this->to->Get($i);
-            return null;
+            return $defaultValue;
         }
     }
 }

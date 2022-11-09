@@ -46,7 +46,7 @@ namespace Server\Database {
             return static::Objects("ORDER BY RAND() LIMIT {$limit}");
         }
 
-        public static function ById(int $id): ?static {
+        public static function ById(int $id = null): ?static {
             return static::Object("WHERE id = '{$id}'");
         }
 

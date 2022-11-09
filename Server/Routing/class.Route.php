@@ -76,19 +76,22 @@ namespace Server\Routing {
 
         public function Call(Request $request): mixed {
             $arguments = [];
+            $params = new Params($this->requestUri, $request->RequestUri());
 
-            if ($this->callback && $this->method) {
+            if (is_string($this->callback)) {
+                $method = $params->Get('method', $this->method);
+
                 $controller = new ($this->callback)();
-                $reflectionMethod = new ReflectionMethod($controller, $this->method);
+                $reflectionMethod = new ReflectionMethod($controller, $method);
 
                 foreach ($reflectionMethod->getParameters() as $parameter) {
                     if ($parameter->getName() == 'request') $arguments['request'] = $request;
                     if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
                     if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
-                    if ($parameter->getName() == 'params') $arguments['params'] = new Params($this->requestUri, $request->RequestUri());
+                    if ($parameter->getName() == 'params') $arguments['params'] = $params;
                 }
 
-                return call_user_func_array([$controller, $this->method], $arguments);
+                return call_user_func_array([$controller, $method], $arguments);
             } else {
                 $reflectionFunction = new ReflectionFunction($this->callback);
 
@@ -96,7 +99,7 @@ namespace Server\Routing {
                     if ($parameter->getName() == 'request') $arguments['request'] = $request;
                     if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
                     if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
-                    if ($parameter->getName() == 'params') $arguments['params'] = new Params($this->requestUri, $request->RequestUri());
+                    if ($parameter->getName() == 'params') $arguments['params'] = $params;
                 }
 
                 return call_user_func_array($this->callback, $arguments);
