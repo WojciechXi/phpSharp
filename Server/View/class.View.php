@@ -4,6 +4,7 @@ namespace Server\View {
 
     use Ob;
     use Program\Program;
+    use Server\Auth\Auth;
     use Server\Config;
     use Server\Server;
     use Server\Session;
@@ -32,6 +33,7 @@ namespace Server\View {
             $path = $this->GetPath() . '/' . $name . '.php';
 
             if (File::Exists($path)) {
+                $params['auth'] = Auth::Instance();
                 $params['config'] = Config::Instance();
                 $params['program'] = Program::Instance();
                 $params['request'] = Request::Instance();

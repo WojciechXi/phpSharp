@@ -4,6 +4,7 @@ namespace Server\Routing {
 
     use ReflectionFunction;
     use ReflectionMethod;
+    use Server\Auth\Auth;
     use Server\Request\Files;
     use Server\View\View;
     use Server\Request\Params;
@@ -77,7 +78,6 @@ namespace Server\Routing {
         }
 
         public function Call(Request $request): mixed {
-            $arguments = [];
             $params = new Params($this->requestUri, $request->RequestUri());
 
             if (is_string($this->callback)) {
@@ -86,30 +86,24 @@ namespace Server\Routing {
                 $controller = new ($this->callback)();
                 $reflectionMethod = new ReflectionMethod($controller, $method);
 
-                foreach ($reflectionMethod->getParameters() as $parameter) {
-                    if ($parameter->getName() == 'request') $arguments['request'] = $request;
-                    if ($parameter->getName() == 'validator') $arguments['validator'] = Validator::Instance();
-                    if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
-                    if ($parameter->getName() == 'files') $arguments['files'] = Files::Instance();
-                    if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
-                    if ($parameter->getName() == 'params') $arguments['params'] = $params;
-                }
-
-                return call_user_func_array([$controller, $method], $arguments);
+                return call_user_func_array([$controller, $method], $this->GetArguments($request, $params, $reflectionMethod->getParameters()));
             } else {
                 $reflectionFunction = new ReflectionFunction($this->callback);
-
-                foreach ($reflectionFunction->getParameters() as $parameter) {
-                    if ($parameter->getName() == 'request') $arguments['request'] = $request;
-                    if ($parameter->getName() == 'validator') $arguments['validator'] = Validator::Instance();
-                    if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
-                    if ($parameter->getName() == 'files') $arguments['files'] = Files::Instance();
-                    if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
-                    if ($parameter->getName() == 'params') $arguments['params'] = $params;
-                }
-
-                return call_user_func_array($this->callback, $arguments);
+                return call_user_func_array($this->callback, $this->GetArguments($request, $params, $reflectionFunction->getParameters()));
             }
+        }
+
+        private function GetArguments(Request $request, Params $params, array $parameters, array $arguments = []): array {
+            foreach ($parameters as $parameter) {
+                if ($parameter->getName() == 'auth') $arguments['auth'] = Auth::Instance();
+                if ($parameter->getName() == 'validator') $arguments['validator'] = Validator::Instance();
+                if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
+                if ($parameter->getName() == 'files') $arguments['files'] = Files::Instance();
+                if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
+                if ($parameter->getName() == 'request') $arguments['request'] = $request;
+                if ($parameter->getName() == 'params') $arguments['params'] = $params;
+            }
+            return $arguments;
         }
     }
 }
