@@ -18,6 +18,7 @@ namespace Server\Response {
 
         private mixed $content = null;
         private string $contentType = 'text/html';
+        private string $redirect = '';
         private int $responseCode = 200;
 
         public function Header(string $key, string $value): self {
@@ -48,9 +49,15 @@ namespace Server\Response {
             return $this->ContentType('text/html')->Content($content);
         }
 
+        public function Redirect(string $redirect = '/'): self {
+            $this->redirect = $redirect;
+            return $this;
+        }
+
         public function Send(): void {
             http_response_code($this->responseCode);
             $this->Header('Content-type', $this->contentType);
+            if ($this->redirect) $this->Header('Location', $this->redirect);
 
             $content = $this->content;
             if (is_object($content) || is_array($content)) $content = json_encode($content);

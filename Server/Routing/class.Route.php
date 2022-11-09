@@ -10,6 +10,7 @@ namespace Server\Routing {
     use Server\Request\Request;
     use Server\Request\RequestUri;
     use Server\Response\Response;
+    use Server\Validation\Validator;
 
     class Route {
 
@@ -87,6 +88,7 @@ namespace Server\Routing {
 
                 foreach ($reflectionMethod->getParameters() as $parameter) {
                     if ($parameter->getName() == 'request') $arguments['request'] = $request;
+                    if ($parameter->getName() == 'validator') $arguments['validator'] = Validator::Instance();
                     if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
                     if ($parameter->getName() == 'files') $arguments['files'] = Files::Instance();
                     if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
@@ -99,6 +101,7 @@ namespace Server\Routing {
 
                 foreach ($reflectionFunction->getParameters() as $parameter) {
                     if ($parameter->getName() == 'request') $arguments['request'] = $request;
+                    if ($parameter->getName() == 'validator') $arguments['validator'] = Validator::Instance();
                     if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
                     if ($parameter->getName() == 'files') $arguments['files'] = Files::Instance();
                     if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();

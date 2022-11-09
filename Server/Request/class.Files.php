@@ -22,7 +22,11 @@ namespace Server\Request {
 
         public function Each(callable $action): array {
             $files = [];
-            foreach ($_FILES as $key => $file) $files[] = $action($file, $key);
+            foreach ($_FILES as $key => $file) {
+                if (!$file) continue;
+                $file = $action($file, $key);
+                if ($file) $files[] = $file;
+            }
             return $files;
         }
     }

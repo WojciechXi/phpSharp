@@ -26,8 +26,12 @@ namespace Server {
             return Program::Instance()->GetPath('Storage');
         }
 
-        public function Save(array $file): ?object {
+        public function Save(array $file = null): ?object {
+            if (!$file) return null;
+
             $pathInfo = pathinfo($file['name']);
+            if (!$pathInfo) return null;
+            if (!isset($pathInfo['extension'])) return null;
 
             $fileName = $pathInfo['filename'];
             $fileExtension = $pathInfo['extension'];
