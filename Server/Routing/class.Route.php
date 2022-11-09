@@ -4,6 +4,7 @@ namespace Server\Routing {
 
     use ReflectionFunction;
     use ReflectionMethod;
+    use Server\Request\Files;
     use Server\View\View;
     use Server\Request\Params;
     use Server\Request\Request;
@@ -87,6 +88,7 @@ namespace Server\Routing {
                 foreach ($reflectionMethod->getParameters() as $parameter) {
                     if ($parameter->getName() == 'request') $arguments['request'] = $request;
                     if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
+                    if ($parameter->getName() == 'files') $arguments['files'] = Files::Instance();
                     if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
                     if ($parameter->getName() == 'params') $arguments['params'] = $params;
                 }
@@ -98,6 +100,7 @@ namespace Server\Routing {
                 foreach ($reflectionFunction->getParameters() as $parameter) {
                     if ($parameter->getName() == 'request') $arguments['request'] = $request;
                     if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
+                    if ($parameter->getName() == 'files') $arguments['files'] = Files::Instance();
                     if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
                     if ($parameter->getName() == 'params') $arguments['params'] = $params;
                 }
