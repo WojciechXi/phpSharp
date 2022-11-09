@@ -28,26 +28,29 @@ namespace Server\View {
             return Program::Instance()->GetPath('Views');
         }
 
-        public function Load(string $name, array $replace = [], array $params = []): ?string {
+        public function Load(string $name, array $params = []): ?string {
             $path = $this->GetPath() . '/' . $name . '.php';
+
             if (File::Exists($path)) {
+                $params['config'] = Config::Instance();
+                $params['program'] = Program::Instance();
+                $params['request'] = Request::Instance();
+                $params['server'] = Server::Instance();
+                $params['session'] = Session::Instance();
+
                 $buffer = Ob::Read(function () use ($path, $params) {
-                    $config = Config::Instance();
-                    $program = Program::Instance();
-                    $request = Request::Instance();
-                    $server = Server::Instance();
-                    $session = Session::Instance();
+                    extract($params);
                     require $path;
                 });
-
-                foreach ($replace as $key => $value) {
-                    if (is_array($value)) $value = implode('', $value);
-                    $buffer = str_replace('{{' . $key . '}}', $value, $buffer);
-                }
 
                 return $buffer;
             }
             return null;
+        }
+
+        public function Write(mixed $variable) {
+            if (is_array($variable)) $variable = implode('', $variable);
+            echo $variable;
         }
     }
 }
