@@ -2,6 +2,8 @@
 
 namespace Server\Response {
 
+    use Server\Server;
+
     class Response {
 
         //Global
@@ -18,7 +20,7 @@ namespace Server\Response {
 
         private mixed $content = null;
         private string $contentType = 'text/html';
-        private string $redirect = '';
+        private ?string $redirect = null;
         private int $responseCode = 200;
 
         public function Header(string $key, string $value): self {
@@ -52,6 +54,10 @@ namespace Server\Response {
         public function Redirect(string $redirect = '/'): self {
             $this->redirect = $redirect;
             return $this;
+        }
+
+        public function Return(): self {
+            return $this->Redirect(Server::Instance()->Get('HTTP_REFERER'));
         }
 
         public function Send(): void {
