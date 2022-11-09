@@ -49,6 +49,7 @@ namespace Program {
             $this->SetPath('Routes', __DIR__ . '/Routes');
             $this->SetPath('Views', __DIR__ . '/Views');
             $this->SetPath('Controllers', __DIR__ . '/Controllers');
+            $this->SetPath('Models', __DIR__ . '/Models');
             $this->SetPath('Application', __DIR__ . '/Application');
         }
 
@@ -56,6 +57,10 @@ namespace Program {
             $controllersDirectory = new Directory($this->GetPath('Controllers'));
             $controllersFiles = $controllersDirectory->GetFiles(true, ['php']);
             foreach ($controllersFiles as $controllersFile) $controllersFile->RequireOnce();
+
+            $modelsDirectory = new Directory($this->GetPath('Models'));
+            $modelsFiles = $modelsDirectory->GetFiles(true, ['php']);
+            foreach ($modelsFiles as $modelsFile) $modelsFile->RequireOnce();
 
             $applicationDirectory = new Directory($this->GetPath('Application'));
             $applicationFiles = $applicationDirectory->GetFiles(true, ['php']);
