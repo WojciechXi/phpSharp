@@ -48,10 +48,15 @@ namespace Program {
             $this->SetPath('Config', __DIR__ . '/Config');
             $this->SetPath('Routes', __DIR__ . '/Routes');
             $this->SetPath('Views', __DIR__ . '/Views');
+            $this->SetPath('Controllers', __DIR__ . '/Controllers');
             $this->SetPath('Application', __DIR__ . '/Application');
         }
 
         protected function Load(): void {
+            $controllersDirectory = new Directory($this->GetPath('Controllers'));
+            $controllersFiles = $controllersDirectory->GetFiles(true, ['php']);
+            foreach ($controllersFiles as $controllersFile) $controllersFile->RequireOnce();
+
             $applicationDirectory = new Directory($this->GetPath('Application'));
             $applicationFiles = $applicationDirectory->GetFiles(true, ['php']);
             foreach ($applicationFiles as $applicationFile) $applicationFile->RequireOnce();

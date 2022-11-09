@@ -2,8 +2,8 @@
 
 namespace Server\Routing {
 
-    use Closure;
     use ReflectionFunction;
+    use ReflectionMethod;
     use Server\View\View;
     use Server\Request\Params;
     use Server\Request\Request;
@@ -14,24 +14,24 @@ namespace Server\Routing {
 
         private static array $routes = [];
 
-        public static function Get(string $uri, callable $callback): void {
+        public static function Get(string $uri, string | callable $callback, string $method = ''): void {
             $requestUri = new RequestUri($uri);
-            static::$routes[] = new Route('GET', $requestUri, $callback);
+            static::$routes[] = new Route('GET', $requestUri, $callback, $method);
         }
 
-        public static function Post(string $uri, callable $callback): void {
+        public static function Post(string $uri, string | callable $callback, string $method = ''): void {
             $requestUri = new RequestUri($uri);
-            static::$routes[] = new Route('POST', $requestUri, $callback);
+            static::$routes[] = new Route('POST', $requestUri, $callback, $method);
         }
 
-        public static function Put(string $uri, callable $callback): void {
+        public static function Put(string $uri, string | callable $callback, string $method = ''): void {
             $requestUri = new RequestUri($uri);
-            static::$routes[] = new Route('PUT', $requestUri, $callback);
+            static::$routes[] = new Route('PUT', $requestUri, $callback, $method);
         }
 
-        public static function Delete(string $uri, callable $callback): void {
+        public static function Delete(string $uri, string | callable $callback, string $method = ''): void {
             $requestUri = new RequestUri($uri);
-            static::$routes[] = new Route('DELETE', $requestUri, $callback);
+            static::$routes[] = new Route('DELETE', $requestUri, $callback, $method);
         }
 
         public static function Execute(Request $request = null) {
@@ -45,18 +45,20 @@ namespace Server\Routing {
 
         //Local
 
-        public function __construct(string $method, RequestUri $requestUri, callable $callback) {
-            $this->method = $method;
+        public function __construct(string $requestMethod, RequestUri $requestUri, string|callable $callback, string $method = '') {
+            $this->requestMethod = $requestMethod;
             $this->requestUri = $requestUri;
             $this->callback = $callback;
+            $this->method = $method;
         }
 
-        private string $method = 'GET';
+        private string $requestMethod = 'GET';
         private ?RequestUri $requestUri = null;
-        private ?Closure $callback = null;
+        private mixed $callback = null;
+        private string $method = '';
 
-        public function VerifyMethod(string $method): bool {
-            return $this->method == $method;
+        public function VerifyMethod(string $requestMethod): bool {
+            return $this->requestMethod == $requestMethod;
         }
 
         public function VerifyUri(RequestUri $requestUri): bool {
@@ -75,15 +77,30 @@ namespace Server\Routing {
         public function Call(Request $request): mixed {
             $arguments = [];
 
-            $reflectionFunction = new ReflectionFunction($this->callback);
-            foreach ($reflectionFunction->getParameters() as $parameter) {
-                if ($parameter->getName() == 'request') $arguments['request'] = $request;
-                if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
-                if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
-                if ($parameter->getName() == 'params') $arguments['params'] = new Params($this->requestUri, $request->RequestUri());
-            }
+            if ($this->callback && $this->method) {
+                $controller = new ($this->callback)();
+                $reflectionMethod = new ReflectionMethod($controller, $this->method);
 
-            return call_user_func_array($this->callback, $arguments);
+                foreach ($reflectionMethod->getParameters() as $parameter) {
+                    if ($parameter->getName() == 'request') $arguments['request'] = $request;
+                    if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
+                    if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
+                    if ($parameter->getName() == 'params') $arguments['params'] = new Params($this->requestUri, $request->RequestUri());
+                }
+
+                return call_user_func_array([$controller, $this->method], $arguments);
+            } else {
+                $reflectionFunction = new ReflectionFunction($this->callback);
+
+                foreach ($reflectionFunction->getParameters() as $parameter) {
+                    if ($parameter->getName() == 'request') $arguments['request'] = $request;
+                    if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
+                    if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
+                    if ($parameter->getName() == 'params') $arguments['params'] = new Params($this->requestUri, $request->RequestUri());
+                }
+
+                return call_user_func_array($this->callback, $arguments);
+            }
         }
     }
 }

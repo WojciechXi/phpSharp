@@ -6,6 +6,7 @@ require_once __DIR__ . '/class.Storage.php';
 require_once __DIR__ . '/class.Cookie.php';
 
 require_once __DIR__ . '/View/index.php';
+require_once __DIR__ . '/Controller/index.php';
 require_once __DIR__ . '/Routing/index.php';
 require_once __DIR__ . '/Request/index.php';
 require_once __DIR__ . '/Response/index.php';
