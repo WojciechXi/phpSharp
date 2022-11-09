@@ -5,6 +5,7 @@ namespace Server\Routing {
     use ReflectionFunction;
     use ReflectionMethod;
     use Server\Auth\Auth;
+    use Server\Config;
     use Server\Request\Files;
     use Server\View\View;
     use Server\Request\Params;
@@ -98,6 +99,7 @@ namespace Server\Routing {
                 if ($parameter->getName() == 'auth') $arguments['auth'] = Auth::Instance();
                 if ($parameter->getName() == 'validator') $arguments['validator'] = Validator::Instance();
                 if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
+                if ($parameter->getName() == 'config') $arguments['config'] = Config::Instance();
                 if ($parameter->getName() == 'files') $arguments['files'] = Files::Instance();
                 if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
                 if ($parameter->getName() == 'request') $arguments['request'] = $request;
