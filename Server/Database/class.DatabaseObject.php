@@ -56,6 +56,11 @@ namespace Server\Database {
             return static::Objects("WHERE id IN ( {$ids} )");
         }
 
+        public static function ObjectOrInsert(string $where = null, array $data = []): ?static {
+            $object = static::Object($where);
+            return $object ? $object : static::Insert($data);
+        }
+
         //Local
 
         public function __construct(object $object = null) {
@@ -65,6 +70,10 @@ namespace Server\Database {
         public int $id = 0;
         public string $dateOfUpdate = '';
         public string $dateOfCreate = '';
+
+        public function __get(string $propertyName) {
+            if ($propertyName == 'Class') return get_class($this);
+        }
 
         private function SetObject(object $object = null): void {
             foreach ($this as $key => $value) $this->$key = isset($object->$key) && $object->$key ? $object->$key : $value;
