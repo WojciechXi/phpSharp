@@ -8,7 +8,7 @@ namespace System\Serialization {
         }
 
         public static function Deserialize(string $data): string {
-            return base64_decode($data);
+            return base64_decode($data, true);
         }
     }
 }

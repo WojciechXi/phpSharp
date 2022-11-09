@@ -51,6 +51,7 @@ namespace Server\Database {
         }
 
         public static function ObjectsById(array $ids): array {
+            if (!$ids) return [];
             $ids = implode(', ', $ids);
             return static::Objects("WHERE id IN ( {$ids} )");
         }
