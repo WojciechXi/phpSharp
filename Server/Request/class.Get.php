@@ -17,7 +17,7 @@ namespace Server\Request {
         }
 
         public function Get(string $getKey, string $defaultValue = null): ?string {
-            return isset($_GET[$getKey]) ? $_GET[$getKey] : $defaultValue;
+            return htmlspecialchars(isset($_GET[$getKey]) ? $_GET[$getKey] : $defaultValue);
         }
 
         public function Each(callable $action): array {

@@ -17,7 +17,7 @@ namespace Server\Request {
         }
 
         public function Get(string $postKey, string $defaultValue = null): ?string {
-            return isset($_POST[$postKey]) ? $_POST[$postKey] : $defaultValue;
+            return htmlspecialchars(isset($_POST[$postKey]) ? $_POST[$postKey] : $defaultValue);
         }
 
         public function Each(callable $action): array {
