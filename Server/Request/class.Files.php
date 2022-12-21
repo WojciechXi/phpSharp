@@ -16,8 +16,8 @@ namespace Server\Request {
         private function __construct() {
         }
 
-        public function Get(string $filesKey, string $defaultValue = null): ?string {
-            return isset($_FILES[$filesKey]) ? $_FILES[$filesKey] : $defaultValue;
+        public function Get(string $filesKey): ?array {
+            return isset($_FILES[$filesKey]) ? $_FILES[$filesKey] : null;
         }
 
         public function Each(callable $action): array {

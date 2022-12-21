@@ -12,6 +12,7 @@ namespace Server\Routing {
     use Server\Request\Request;
     use Server\Request\RequestUri;
     use Server\Response\Response;
+    use Server\Storage;
     use Server\Validation\Validator;
 
     class Route {
@@ -102,6 +103,7 @@ namespace Server\Routing {
                 if ($parameter->getName() == 'config') $arguments['config'] = Config::Instance();
                 if ($parameter->getName() == 'files') $arguments['files'] = Files::Instance();
                 if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
+                if ($parameter->getName() == 'storage') $arguments['storage'] = Storage::Instance();
                 if ($parameter->getName() == 'request') $arguments['request'] = $request;
                 if ($parameter->getName() == 'params') $arguments['params'] = $params;
             }

@@ -16,7 +16,7 @@ namespace Server\Request {
         private function __construct() {
         }
 
-        public function Get(string $postKey, string $defaultValue = null): ?string {
+        public function Get(string $postKey, mixed $defaultValue = null): mixed {
             return isset($_POST[$postKey]) ? $_POST[$postKey] : $defaultValue;
         }
 

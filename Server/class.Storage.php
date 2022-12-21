@@ -18,12 +18,13 @@ namespace Server {
         private function __construct() {
         }
 
-        public function GetUrl(string $item): string {
+        public function GetUrl(string $item = null): string {
             return Program::Instance()->GetUrl("Storage/{$item}");
         }
 
-        public function GetPath(): string {
-            return Program::Instance()->GetPath('Storage');
+        public function GetPath(string $item = null): string {
+            if ($item) return Program::Instance()->GetPath("Storage") . "/{$item}";
+            return Program::Instance()->GetPath("Storage");
         }
 
         public function Save(array $file = null): ?object {

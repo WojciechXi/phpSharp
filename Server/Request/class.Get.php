@@ -16,7 +16,7 @@ namespace Server\Request {
         private function __construct() {
         }
 
-        public function Get(string $getKey, string $defaultValue = null): ?string {
+        public function Get(string $getKey, mixed $defaultValue = null): mixed {
             return htmlspecialchars(isset($_GET[$getKey]) ? $_GET[$getKey] : $defaultValue);
         }
 

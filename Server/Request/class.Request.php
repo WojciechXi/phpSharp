@@ -29,12 +29,16 @@ namespace Server\Request {
         private ?Post $post = null;
         private ?Files $files = null;
 
-        public function Get(string $getKey, string $defaultValue = ''): string {
+        public function Get(string $getKey, mixed $defaultValue = ''): mixed {
             return $this->get->Get($getKey, $defaultValue);
         }
 
-        public function Post(string $postKey, string $defaultValue = ''): string {
+        public function Post(string $postKey, mixed $defaultValue = ''): mixed {
             return $this->post->Get($postKey, $defaultValue);
+        }
+
+        public function File(string $fileKey): array {
+            return $this->files->Get($fileKey);
         }
 
         public function EachFile(callable $action): array {
