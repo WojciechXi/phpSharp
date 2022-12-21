@@ -51,8 +51,8 @@ namespace Server\Response {
             return $this->ContentType('text/html')->Content($content);
         }
 
-        public function Redirect(string $redirect = '/'): self {
-            $this->redirect = $redirect;
+        public function Redirect(string $redirect = null): self {
+            $this->redirect = $redirect ? $redirect : Server::Instance()->Get('HTTP_REFERER', '/');
             return $this;
         }
 

@@ -72,7 +72,7 @@ namespace Server\Database {
         public string $dateOfCreate = '';
 
         public function __get(string $propertyName) {
-            if ($propertyName == 'Class') return get_class($this);
+            if ($propertyName == 'Type') return get_class($this);
         }
 
         private function SetObject(object $object = null): void {
