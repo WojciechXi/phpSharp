@@ -34,7 +34,7 @@ namespace Program {
             return isset($this->paths[$name]) ? $this->paths[$name] : $defaultPath;
         }
 
-        public final function GetUrl(string $name): string {
+        public final function GetUrl(string $name = null): string {
             $server = Server::Instance();
             $requestScheme = $server->Get('REQUEST_SCHEME');
             $httpHost = $server->Get('HTTP_HOST');
