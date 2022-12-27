@@ -14,6 +14,8 @@ namespace Server\Database {
             $keys = [];
             $values = [];
             foreach ($data as $key => $value) {
+                $key = Database::Instance()->RealEscapeString($key);
+                $value = Database::Instance()->RealEscapeString($value);
                 $keys[] = $key;
                 $values[] = "'{$value}'";
             }
@@ -81,7 +83,11 @@ namespace Server\Database {
 
         public function Update(array $data = []): bool {
             $table = static::$table;
-            foreach ($data as $key => $value) $data[$key] = "{$key} = '{$value}'";
+            foreach ($data as $key => $value) {
+                $key = Database::Instance()->RealEscapeString($key);
+                $value = Database::Instance()->RealEscapeString($value);
+                $data[$key] = "{$key} = '{$value}'";
+            }
             $data = implode(', ', $data);
             if (Database::Instance()->Bool("UPDATE {$table} SET {$data} WHERE id = '{$this->id}' LIMIT 1")) {
                 $object = Database::Instance()->Object("SELECT * FROM {$table} WHERE id = '{$this->id}'");

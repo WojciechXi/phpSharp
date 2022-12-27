@@ -21,6 +21,10 @@ namespace Server {
 
         private ?mysqli $mysqli = null;
 
+        public function RealEscapeString(string $string): string {
+            return mysqli_real_escape_string($this->mysqli, $string);
+        }
+
         public function Connect(): bool {
             $host = Config::Instance()->Get('Database.Host');
             $user = Config::Instance()->Get('Database.User');
