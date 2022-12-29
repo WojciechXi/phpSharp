@@ -36,7 +36,8 @@ namespace Program {
 
         public final function GetUrl(string $name = null): string {
             $server = Server::Instance();
-            $requestScheme = $server->Get('REQUEST_SCHEME');
+            // $requestScheme = $server->Get('REQUEST_SCHEME');
+            $requestScheme = $server->Get('HTTPS', 'on') == 'on' ? 'https' : 'http';
             $httpHost = $server->Get('HTTP_HOST');
             return "{$requestScheme}://{$httpHost}/{$name}";
         }

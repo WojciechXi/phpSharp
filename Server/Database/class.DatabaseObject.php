@@ -40,6 +40,12 @@ namespace Server\Database {
             return $objects;
         }
 
+        public static function Count(string $where = null): int {
+            $table = static::$table;
+            $object = Database::Instance()->Object("SELECT COUNT(id) as Count FROM {$table} {$where}");
+            return intval($object ? $object->Count : 0);
+        }
+
         public static function Last(int $limit = 9): array {
             return static::Objects("ORDER BY dateOfUpdate DESC LIMIT {$limit}");
         }

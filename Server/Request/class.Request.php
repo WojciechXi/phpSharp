@@ -29,11 +29,11 @@ namespace Server\Request {
         private ?Post $post = null;
         private ?Files $files = null;
 
-        public function Get(string $getKey, mixed $defaultValue = ''): mixed {
+        public function Get(string $getKey, mixed $defaultValue = null): mixed {
             return $this->get->Get($getKey, $defaultValue);
         }
 
-        public function Post(string $postKey, mixed $defaultValue = ''): mixed {
+        public function Post(string $postKey, mixed $defaultValue = null): mixed {
             return $this->post->Get($postKey, $defaultValue);
         }
 
