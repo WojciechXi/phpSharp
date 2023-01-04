@@ -12,6 +12,10 @@ namespace Server\Request {
 
         private string $requestUri = '';
 
+        public function RequestUri(): string {
+            return $this->requestUri;
+        }
+
         public function Get(int $index = 0, string $defaultValue = null): ?string {
             $requestUri = explode('?', $this->requestUri)[0];
             $requestUri = explode('/', $requestUri);
@@ -23,8 +27,8 @@ namespace Server\Request {
         public function Length(): int {
             $requestUri = explode('?', $this->requestUri)[0];
             $requestUri = explode('/', $requestUri);
-            $requestUri = array_diff($requestUri, ['']);
             $requestUri = array_values($requestUri);
+            $requestUri = array_diff($requestUri, ['']);
             return count($requestUri);
         }
     }

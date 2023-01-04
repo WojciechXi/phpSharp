@@ -20,13 +20,11 @@ namespace Program {
         //Local
 
         private function __construct() {
-            $this->Preload();
-            $this->Load();
         }
 
         private array $paths = [];
 
-        protected final function SetPath(string $name, string $path): string {
+        public final function SetPath(string $name, string $path): string {
             return $this->paths[$name] = $path;
         }
 
@@ -77,6 +75,8 @@ namespace Program {
         }
 
         public final function Main(): void {
+            $this->Preload();
+            $this->Load();
             Session::Instance()->Start();
             Route::Execute();
             Response::Instance()->Send();

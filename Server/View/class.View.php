@@ -25,12 +25,12 @@ namespace Server\View {
         private function __construct() {
         }
 
-        public function GetPath(): string {
-            return Program::Instance()->GetPath('Views');
+        public function GetPath(string $view = null): string {
+            return Program::Instance()->GetPath($view ? $view : 'Views');
         }
 
-        public function Load(string $name, array $params = []): ?string {
-            $path = $this->GetPath() . '/' . $name . '.php';
+        public function Load(string $name, array $params = [], string $view = null): ?string {
+            $path = $this->GetPath($view) . '/' . $name . '.php';
 
             if (File::Exists($path)) {
                 $params['auth'] = Auth::Instance();

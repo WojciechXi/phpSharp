@@ -6,6 +6,7 @@ namespace Server\Routing {
     use ReflectionMethod;
     use Server\Auth\Auth;
     use Server\Config;
+    use Server\Database\DatabaseObject;
     use Server\Request\Files;
     use Server\View\View;
     use Server\Request\Params;
@@ -17,26 +18,33 @@ namespace Server\Routing {
 
     class Route {
 
+        public static function Debug(): void {
+            print_r(static::$routes);
+        }
+
         private static array $routes = [];
 
-        public static function Get(string $uri, string | callable $callback, string $method = ''): void {
-            $requestUri = new RequestUri($uri);
-            static::$routes[] = new Route('GET', $requestUri, $callback, $method);
+        public static function Get(string $uri, string | callable $callback, string $method = ''): ?Route {
+            return static::Route('GET', $uri, $callback, $method);
         }
 
-        public static function Post(string $uri, string | callable $callback, string $method = ''): void {
-            $requestUri = new RequestUri($uri);
-            static::$routes[] = new Route('POST', $requestUri, $callback, $method);
+        public static function Post(string $uri, string | callable $callback, string $method = ''): ?Route {
+            return static::Route('POST', $uri, $callback, $method);
         }
 
-        public static function Put(string $uri, string | callable $callback, string $method = ''): void {
-            $requestUri = new RequestUri($uri);
-            static::$routes[] = new Route('PUT', $requestUri, $callback, $method);
+        public static function Put(string $uri, string | callable $callback, string $method = ''): ?Route {
+            return static::Route('PUT', $uri, $callback, $method);
         }
 
-        public static function Delete(string $uri, string | callable $callback, string $method = ''): void {
+        public static function Delete(string $uri, string | callable $callback, string $method = ''): ?Route {
+            return static::Route('DELETE', $uri, $callback, $method);
+        }
+
+        private static function Route(string $requestMethod, string $uri, string | callable $callback, string $method = ''): ?Route {
             $requestUri = new RequestUri($uri);
-            static::$routes[] = new Route('DELETE', $requestUri, $callback, $method);
+            $route = new Route($requestMethod, $requestUri, $callback, $method);
+            array_push(static::$routes, $route);
+            return $route;
         }
 
         public static function Execute(Request $request = null) {
@@ -50,7 +58,7 @@ namespace Server\Routing {
 
         //Local
 
-        public function __construct(string $requestMethod, RequestUri $requestUri, string|callable $callback, string $method = '') {
+        protected function __construct(string $requestMethod, RequestUri $requestUri, string|callable $callback, string $method = '') {
             $this->requestMethod = $requestMethod;
             $this->requestUri = $requestUri;
             $this->callback = $callback;
@@ -97,15 +105,64 @@ namespace Server\Routing {
 
         private function GetArguments(Request $request, Params $params, array $parameters, array $arguments = []): array {
             foreach ($parameters as $parameter) {
-                if ($parameter->getName() == 'auth') $arguments['auth'] = Auth::Instance();
-                if ($parameter->getName() == 'validator') $arguments['validator'] = Validator::Instance();
-                if ($parameter->getName() == 'response') $arguments['response'] = Response::Instance();
-                if ($parameter->getName() == 'config') $arguments['config'] = Config::Instance();
-                if ($parameter->getName() == 'files') $arguments['files'] = Files::Instance();
-                if ($parameter->getName() == 'view') $arguments['view'] = View::Instance();
-                if ($parameter->getName() == 'storage') $arguments['storage'] = Storage::Instance();
-                if ($parameter->getName() == 'request') $arguments['request'] = $request;
-                if ($parameter->getName() == 'params') $arguments['params'] = $params;
+                $type = strval($parameter->getType());
+                $type = str_replace('?', '', $type);
+
+                if ($type == Auth::class) {
+                    $arguments['auth'] = Auth::Instance();
+                    continue;
+                }
+
+                if ($type == Validator::class) {
+                    $arguments['validator'] = Validator::Instance();
+                    continue;
+                }
+
+                if ($type == Response::class) {
+                    $arguments['response'] = Response::Instance();
+                    continue;
+                }
+
+                if ($type == Config::class) {
+                    $arguments['config'] = Config::Instance();
+                    continue;
+                }
+
+                if ($type == Files::class) {
+                    $arguments['files'] = Files::Instance();
+                    continue;
+                }
+
+                if ($type == View::class) {
+                    $arguments['view'] = View::Instance();
+                    continue;
+                }
+
+                if ($type == Storage::class) {
+                    $arguments['storage'] = Storage::Instance();
+                    continue;
+                }
+
+                if ($type == Request::class) {
+                    $arguments['request'] = $request;
+                    continue;
+                }
+
+                if ($type == Params::class) {
+                    $arguments['params'] = $params;
+                    continue;
+                }
+
+                $param = $params->Get($parameter->getName());
+
+                if (is_subclass_of($type, DatabaseObject::class)) {
+                    $object = ($type)::ById($param);
+                    $arguments[$parameter->getName()] = $object;
+                    continue;
+                }
+
+                $arguments[$parameter->getName()] = $param;
+                continue;
             }
             return $arguments;
         }
