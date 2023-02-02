@@ -23,6 +23,10 @@ namespace Server {
             session_start();
         }
 
+        public function GetId(): string | false {
+            return session_id();
+        }
+
         public function Get(string $sessionKey, string $defaultValue = null): ?string {
             return isset($_SESSION[$sessionKey]) ? $_SESSION[$sessionKey] : $defaultValue;
         }
