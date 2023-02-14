@@ -21,7 +21,7 @@ namespace Server {
         }
 
         public function Set(string $cookieKey, string $cookieValue): bool {
-            return setcookie($cookieKey, $cookieValue);
+            return setcookie($cookieKey, $cookieValue, 0, '/');
         }
     }
 }
