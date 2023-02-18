@@ -8,7 +8,7 @@ namespace Server\Database {
 
         public static string $table = '';
 
-        public static function Insert(array $data = []): ?static {
+        public static function Insert(array $data = [], callable $callback = null): ?static {
             $table = static::$table;
 
             $keys = [];
@@ -24,7 +24,11 @@ namespace Server\Database {
 
             $id = Database::Instance()->Insert("INSERT INTO {$table} ( {$keys} ) VALUES ( {$values} )");
 
-            return static::ById($id);
+            $object = static::ById($id);
+
+            if ($callback && $object) $callback($object);
+
+            return $object;
         }
 
         public static function Object(string $where = null): ?static {
