@@ -22,7 +22,7 @@ namespace System\IO {
         private string $path = '';
 
         private function GetItems(): array {
-            return array_diff(scandir($this->path), ['.', '..']);
+            return file_exists($this->path) ? array_diff(scandir($this->path), ['.', '..']) : [];
         }
 
         public function GetDirectories(array $directories = []): array {
