@@ -53,25 +53,6 @@ namespace Program {
         }
 
         protected function Load(): void {
-            $modelsDirectory = new Directory($this->GetPath('Models'));
-            $modelsFiles = $modelsDirectory->GetFiles(true, ['php']);
-            foreach ($modelsFiles as $modelsFile) $modelsFile->RequireOnce();
-
-            $controllersDirectory = new Directory($this->GetPath('Controllers'));
-            $controllersFiles = $controllersDirectory->GetFiles(true, ['php']);
-            foreach ($controllersFiles as $controllersFile) $controllersFile->RequireOnce();
-
-            $applicationDirectory = new Directory($this->GetPath('Application'));
-            $applicationFiles = $applicationDirectory->GetFiles(true, ['php']);
-            foreach ($applicationFiles as $applicationFile) $applicationFile->RequireOnce();
-
-            $configDirectory = new Directory($this->GetPath('Config'));
-            $configFiles = $configDirectory->GetFiles(true, ['php']);
-            foreach ($configFiles as $configFile) $configFile->RequireOnce();
-
-            $routesDirectory = new Directory($this->GetPath('Routes'));
-            $routesFiles = $routesDirectory->GetFiles(true, ['php']);
-            foreach ($routesFiles as $routesFile) $routesFile->RequireOnce();
         }
 
         public final function Main(): void {

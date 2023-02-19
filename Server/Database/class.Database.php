@@ -21,8 +21,8 @@ namespace Server {
 
         private ?mysqli $mysqli = null;
 
-        public function RealEscapeString(string $string): string {
-            return mysqli_real_escape_string($this->mysqli, $string);
+        public function RealEscapeString(string $string = null): string {
+            return mysqli_real_escape_string($this->mysqli, $string ?? '');
         }
 
         public function Connect(): bool {
