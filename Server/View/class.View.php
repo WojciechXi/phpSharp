@@ -2,12 +2,11 @@
 
 namespace Server\View {
 
-    use Ob;
-    use Program\Program;
     use Server\Auth\Auth;
     use Server\Config;
     use Server\Server;
     use Server\Session;
+    use System\Ob;
     use System\IO\File;
     use Server\Request\Request;
 
@@ -26,7 +25,6 @@ namespace Server\View {
             $this->params = [
                 'auth' => Auth::Instance(),
                 'config' => Config::Instance(),
-                'program' => Program::Instance(),
                 'request' => Request::Instance(),
                 'server' => Server::Instance(),
                 'session' => Session::Instance(),
@@ -35,15 +33,11 @@ namespace Server\View {
 
         private array $params = [];
 
-        public function GetPath(string $view = null): string {
-            return Program::Instance()->GetPath($view ? $view : 'Views');
-        }
-
         public function Load(string $name, array $params = [], string $view = null): ?string {
             $params = array_merge($this->params, $params);
             $this->params = $params;
 
-            $path = $this->GetPath($view) . '/' . $name . '.php';
+            $path = $view . '/' . $name . '.php';
 
             if (File::Exists($path)) {
                 $buffer = Ob::Read(function () use ($path, $params) {
